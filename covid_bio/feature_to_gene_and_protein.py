@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import json
 import sys
 import os
 import re
@@ -186,6 +187,58 @@ class Feature_To_Gene_And_Protein:
         self.get_organism()
         self.standardize_cds()
         self.standardize_mat_peptide()
+
+        self.get_info()
+
+    def get_info(self):
+        records = {}
+
+        def get_field_from_annotations(annotations, field):
+            value = 'unknown'
+            if field in annotations.keys():
+                value = annotations[field]
+            return value
+
+        fields = ['date', 'host', 'organism', 'molecule_type']
+        for acc in self.accs.keys():
+            record = {'accession': acc}
+
+            annotations = self.accs[acc]['annotations']
+            for field in fields:
+                record[field] = get_field_from_annotations(annotations, field)
+
+            references = [(reference.journal, reference.pubmed_id) for reference in annotations['references']]
+
+            record['journal'] = []
+            record['pubmed'] = []
+
+            for journal, pubmed_id in references:
+                if pubmed_id:
+                    record['journal'].append(journal)
+                    record['pubmed'].append(pubmed_id)
+
+            country = 'unknown'
+            if 'country' in self.accs[acc]['source'].qualifiers.keys():
+                country = self.accs[acc]['source'].qualifiers['country'][0]
+                country = country.split(':')[0]
+
+            record['country'] = country
+
+            if 'host' in self.accs[acc]['source'].qualifiers.keys():
+                host = self.accs[acc]['source'].qualifiers['host'][0]
+            elif 'isolation_source' in self.accs[acc]['source'].qualifiers.keys():
+                host = self.accs[acc]['source'].qualifiers['isolation_source'][0]
+            else:
+                host = 'unknown'
+
+            record['host'] = host
+
+            # print(record)
+
+            records[acc] = record
+
+        with open("data.json", "w") as out:
+            json.dump(records, out)
 
     def standardize_cds(self):
         '''
