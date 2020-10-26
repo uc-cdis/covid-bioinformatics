@@ -1,6 +1,6 @@
 # covid-bioinformatics
 Software tools to collect and analyze Coronavirus sequences, including code that extracts gene and protein
-sequences from COV (coronavirus) genome files downloaded from NCBI, and creates gene and protein-specific 
+sequences from COV (coronavirus) genome files downloaded from NCBI, and creates gene and protein-specific
 sequence collections, alignments, and Hidden Markov Models (HMMs). The HMMs can be used to annotate COV
 sequences and create BED files for genome visualization.
 
@@ -12,7 +12,7 @@ sequences and create BED files for genome visualization.
 * `./annotate_to_bed.py *.gb`
 
 
-The COV genes and proteins are parsed from the GenBank files as features and assigned standard names based on 
+The COV genes and proteins are parsed from the GenBank files as features and assigned standard names based on
 their *product* tags. Possible synonyms for these standard names are listed in *cov_dictionary.yaml*. A
 QC step compares all the COV protein sequences to expected lengths listed in the *cov_length_variants.yaml* file, and
 sequences that do not match expected lengths are not included in sequence files, alignments, or HMMs.

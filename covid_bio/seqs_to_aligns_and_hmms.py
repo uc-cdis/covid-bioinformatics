@@ -26,7 +26,7 @@ args = parser.parse_args()
 '''
 
 def main():
-    builder = Seqs_To_Aligns_And_Hmms(args.verbose, args.aligner, args.hmmbuilder, args.skip, 
+    builder = Seqs_To_Aligns_And_Hmms(args.verbose, args.aligner, args.hmmbuilder, args.skip,
         args.json, args.maf, args.cov_dir, args.files)
     for f in builder.files:
         if not os.path.isfile(f):
@@ -65,7 +65,7 @@ class Seqs_To_Aligns_And_Hmms:
             for fa in SeqIO.parse(path, "fasta"):
                 seqs.append(fa)
             seqs = self.remove_dups(seqs, os.path.basename(path))
-        except (RuntimeError) as exception: 
+        except (RuntimeError) as exception:
             print("Error parsing sequences in '" +
                 str(path) + "':" + str(exception))
         return seqs
@@ -93,8 +93,8 @@ class Seqs_To_Aligns_And_Hmms:
 
         # Most aligners will reject a file with a single sequence so just copy
         if len(seqs) == 1:
-            cmd = ['cp', 
-                    os.path.join(self.cov_dir, name + '.fa'), 
+            cmd = ['cp',
+                    os.path.join(self.cov_dir, name + '.fa'),
                     align_name]
             subprocess.run(cmd, check=True)
         else:
@@ -158,9 +158,9 @@ class Seqs_To_Aligns_And_Hmms:
         # Either --amino or --dna
         opt = '--amino' if '-aa' in name else '--dna'
         try:
-            subprocess.run([self.hmmbuild, 
-                            opt, 
-                            hmm_name, 
+            subprocess.run([self.hmmbuild,
+                            opt,
+                            hmm_name,
                             os.path.join(self.cov_dir, name + '.fasta')],
                             check=True)
         except (subprocess.CalledProcessError) as exception:
